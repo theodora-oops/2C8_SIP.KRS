@@ -43,6 +43,13 @@
 
         .edit { background:orange; color:white; }
         .delete { background:red; color:white; }
+        .save { background:green; color:white; }
+        .cancel { background:gray; color:white; }
+
+        input {
+            padding:5px;
+            width:90%;
+        }
     </style>
 </head>
 
@@ -54,43 +61,120 @@
 
     <div class="card">
 
-        <button class="btn" style="background:#28a745;color:white;">
+        <button class="btn" id="btnTambah" style="background:#28a745;color:white;">
             + Tambah Dosen
         </button>
 
-        <table>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Aksi</th>
-            </tr>
-
-            <tr>
-                <td>1</td>
-                <td>Dosen A</td>
-                <td>dosenA@mail.com</td>
-                <td>
-                    <button class="btn edit">Edit</button>
-                    <button class="btn delete">Hapus</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>2</td>
-                <td>Dosen B</td>
-                <td>dosenB@mail.com</td>
-                <td>
-                    <button class="btn edit">Edit</button>
-                    <button class="btn delete">Hapus</button>
-                </td>
-            </tr>
-
-        </table>
+        <table id="tabelDosen"></table>
 
     </div>
 
 </div>
+
+<script>
+let dosens = JSON.parse(localStorage.getItem('dosens')) || [
+    { nama: "Dosen A", email: "dosenA@mail.com" },
+    { nama: "Dosen B", email: "dosenB@mail.com" }
+];
+
+let editIndex = null;
+
+// render tabel
+function renderTable() {
+    const table = document.getElementById("tabelDosen");
+
+    table.innerHTML = `
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Aksi</th>
+        </tr>
+    `;
+
+    dosens.forEach((dosen, index) => {
+        if (editIndex === index) {
+            // mode edit
+            table.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><input type="text" id="editNama" value="${dosen.nama}"></td>
+                    <td><input type="email" id="editEmail" value="${dosen.email}"></td>
+                    <td>
+                        <button class="btn save" onclick="saveEdit(${index})">Simpan</button>
+                        <button class="btn cancel" onclick="cancelEdit()">Batal</button>
+                    </td>
+                </tr>
+            `;
+        } else {
+            // mode normal
+            table.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${dosen.nama}</td>
+                    <td>${dosen.email}</td>
+                    <td>
+                        <button class="btn edit" onclick="startEdit(${index})">Edit</button>
+                        <button class="btn delete" onclick="deleteDosen(${index})">Hapus</button>
+                    </td>
+                </tr>
+            `;
+        }
+    });
+
+    localStorage.setItem('dosens', JSON.stringify(dosens));
+}
+
+// tambah
+function tambahDosen() {
+    let nama = prompt("Masukkan nama dosen:");
+    if (!nama) return;
+
+    let email = prompt("Masukkan email dosen:");
+    if (!email) return;
+
+    dosens.push({ nama, email });
+    renderTable();
+}
+
+// mulai edit
+function startEdit(index) {
+    editIndex = index;
+    renderTable();
+}
+
+// simpan edit
+function saveEdit(index) {
+    let nama = document.getElementById("editNama").value;
+    let email = document.getElementById("editEmail").value;
+
+    if (!nama || !email) return;
+
+    dosens[index] = { nama, email };
+    editIndex = null;
+    renderTable();
+}
+
+// batal edit
+function cancelEdit() {
+    editIndex = null;
+    renderTable();
+}
+
+// hapus
+function deleteDosen(index) {
+    if (confirm("Yakin mau hapus dosen ini?")) {
+        dosens.splice(index, 1);
+        renderTable();
+    }
+}
+
+// tombol tambah
+document.getElementById("btnTambah").addEventListener("click", tambahDosen);
+
+// load pertama
+renderTable();
+</script>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard - SIPKRS</title>
+    <title>Admin Dashboard - SIP.KRS</title>
 
     <style>
         body {
@@ -99,7 +99,7 @@
 
     <div class="topbar">
         <h3>Dashboard Admin</h3>
-        <p>Selamat datang di sistem SIPKRS</p>
+        <p>Selamat datang di sistem SIP.KRS</p>
     </div>
 
     <div class="grid">
@@ -123,7 +123,7 @@
 
     <div class="card">
         <h3>Informasi Sistem</h3>
-        <p>Ini adalah dashboard admin SIPKRS. Gunakan menu di sebelah kiri untuk mengelola data.</p>
+        <p>Ini adalah dashboard admin SIP.KRS. Gunakan menu di sebelah kiri untuk mengelola data.</p>
     </div>
 
 </div>
