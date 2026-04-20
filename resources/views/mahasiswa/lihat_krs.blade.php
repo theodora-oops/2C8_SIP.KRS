@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Isi KRS</title>
+<title>Lihat KRS</title>
 
 <style>
 body{
@@ -27,13 +27,18 @@ font-weight:bold;
 margin-bottom:30px;
 }
 
+/* MENU FIX */
 .menu{
+display:block;
 padding:15px;
 margin-bottom:15px;
 border-radius:20px;
 background:#ddd;
 font-size:18px;
+text-decoration:none;
 cursor:pointer;
+text-decoration:none;
+color:black;
 }
 
 .menu:hover{
@@ -68,7 +73,6 @@ font-size:24px;
 font-weight:bold;
 }
 
-/* PROFIL */
 .profile{
 display:flex;
 flex-direction:column;
@@ -97,24 +101,6 @@ border-radius:25px;
 padding:25px;
 }
 
-/* TOP */
-.top{
-font-size:18px;
-margin-bottom:15px;
-}
-
-select{
-font-size:16px;
-padding:5px;
-}
-
-/* BIODATA */
-.bio{
-font-size:18px;
-margin-bottom:15px;
-line-height:1.6;
-}
-
 /* TABLE */
 table{
 width:80%;
@@ -134,7 +120,7 @@ background:#ddd;
 
 /* BOTTOM */
 .bottom{
-margin-top:20px;
+margin-top:30px;
 display:flex;
 justify-content:space-between;
 width:80%;
@@ -143,36 +129,25 @@ margin-right:auto;
 align-items:center;
 }
 
-.total{
-font-size:18px;
-font-weight:bold;
-}
-
 .box-sks{
 border:2px solid black;
 padding:5px 15px;
 background:white;
-margin-left:10px;
 display:inline-block;
 }
 
 /* BUTTON */
-button{
-padding:8px 18px;
+.btn{
+margin-top:10px;
+padding:10px 20px;
 background:#5e97da;
-border:1px solid black;
+border:2px solid black;
 cursor:pointer;
-margin-left:5px;
 }
 </style>
 </head>
 
 <body>
-
-{{-- ✅ FIX ANTI ERROR --}}
-@php
-    $semester = $semester ?? 1;
-@endphp
 
 <div class="wrapper">
 
@@ -180,13 +155,13 @@ margin-left:5px;
 <div class="sidebar">
 <div class="logo">SIP.KRS</div>
 
-<a href="{{ route('mahasiswa.dashboard') }}"><div class="menu">🏠 Beranda</div></a>
+<<a href="/mahasiswa/dashboard"><div class="menu">🏠 Beranda</div></a>
 
-<a href="{{ route('krs.index') }}"><div class="menu active">📄 Isi KRS</div></a>
+<a href="/mahasiswa/krs"><div class="menu active">📄 Isi KRS</div></a>
 
-<a href="{{ route('krs.lihat') }}"><div class="menu">📄 Lihat KRS</div></a>
+<a href="/mahasiswa/lihat-krs"><div class="menu">📄 Lihat KRS</div></a>
 
-<a href="{{ route('khs.index') }}"><div class="menu">📄 Lihat KHS</div></a>
+<a href="/mahasiswa/khs"><div class="menu">📄 Lihat KHS</div></a>
 
 <a href="/login"><div class="menu">↪ Logout</div></a>
 </div>
@@ -196,10 +171,9 @@ margin-left:5px;
 
 <!-- HEADER -->
 <div class="header">
-<div class="header-title">
-Selamat Datang, Enif Azzahra 👋
-</div>
-
+    <div class="header-title">
+        Selamat Datang, Enif Azzahra 👋
+    </div>
 <div class="profile">
 <img src="{{ asset('user.webp') }}">
 <span>Enif</span>
@@ -208,117 +182,57 @@ Selamat Datang, Enif Azzahra 👋
 
 <div class="box">
 
-<!-- ALERT -->
-@if(session('success'))
-<div style="color:green; margin-bottom:10px;">
-{{ session('success') }}
-</div>
-@endif
-
-<!-- PILIH SEMESTER -->
-<form method="GET" action="{{ route('krs.index') }}">
-<div class="top">
+<!-- SEMESTER -->
+<div style="margin-bottom:15px; font-size:18px;">
 Semester :
-<select name="semester" onchange="this.form.submit()">
+<select>
 @for ($i = 1; $i <= 8; $i++)
-<option value="{{ $i }}" {{ $semester == $i ? 'selected' : '' }}>
-{{ $i }}
-</option>
+<option {{ $semester == $i ? 'selected' : '' }}>{{ $i }}</option>
 @endfor
 </select>
 </div>
-</form>
 
 <!-- BIODATA -->
-<div class="bio">
+<div style="margin-bottom:15px; font-size:18px;">
 Nama : Enif Azzahra <br>
 IP Semester Lalu : 3.85
 </div>
 
-<!-- FORM -->
-<form action="{{ route('krs.simpan') }}" method="POST">
-@csrf
-
-<input type="hidden" name="semester" value="{{ $semester }}">
-
+<!-- TABLE -->
 <table>
 <tr>
 <th>Kode</th>
 <th>Mata Kuliah</th>
 <th>SKS</th>
-<th>Pilih</th>
+<th>Status</th>
 </tr>
 
-@foreach($matkuls as $m)
+@foreach($krs as $m)
 <tr>
 <td>{{ $m['kode'] }}</td>
 <td>{{ $m['nama_mk'] }}</td>
 <td>{{ $m['sks'] }}</td>
-<td>
-<input 
-type="checkbox"
-name="mk[]"
-value="{{ $m['id'] }}"
-data-sks="{{ $m['sks'] }}"
-class="checkmk">
-</td>
+<td>✔️ Diambil</td>
 </tr>
 @endforeach
 
 </table>
 
+<!-- BOTTOM -->
 <div class="bottom">
 
-<div class="total">
-Total SKS :
-<span class="box-sks"><span id="total">0</span>/24</span>
-</div>
-
 <div>
-<button type="submit">Simpan KRS</button>
-<button type="reset">Batal</button>
+Total SKS :
+<span class="box-sks">{{ $total_sks }}/24</span>
+</div>
+
+<button class="btn">📄 Cetak PDF</button>
+
 </div>
 
 </div>
-
-</form>
-
 </div>
 </div>
-</div>
-
-<script>
-let total = 0;
-
-document.querySelectorAll('.checkmk').forEach(function(cb){
-cb.addEventListener('change', function(){
-
-let sks = parseInt(this.dataset.sks);
-
-if(this.checked){
-
-if(total + sks > 24){
-alert('Maksimal 24 SKS');
-this.checked = false;
-return;
-}
-
-total += sks;
-
-}else{
-total -= sks;
-}
-
-document.getElementById('total').innerText = total;
-
-});
-});
-
-document.querySelector('button[type=reset]').addEventListener('click', function(){
-total = 0;
-document.getElementById('total').innerText = 0;
-});
-</script>
 
 </body>
 </html>
