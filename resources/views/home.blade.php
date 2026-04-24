@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home</title>
-</head>
-<body>
+<link rel="stylesheet' href="{{ asset( 'styles/style_enif.css') }}">
 
-<h1>Halaman Home</h1>
-<p>Selamat datang {{$nama}} di Sistem Pengolahan KRS dan KHS</p>
-<p>Anda bekerja sebagai {{$pekerjaan}}</p>
+<h1> Ini Judul Merah</h1>
 
-<a href="/contact">Contact</a>
-
-</body>
-</html>
+<img src="{{ asset('images/bungalili.webp') }}" alt="">
+<img src="{{ asset('images/mawar.png') }}" alt="">

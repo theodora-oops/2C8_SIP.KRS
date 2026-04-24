@@ -273,5 +273,8 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+        <div class="bg-blue-500 p-4 m-4 rounded-lg text-white">
+    Ini pakai Tailwind
+    </div>
     </body>
 </html>
