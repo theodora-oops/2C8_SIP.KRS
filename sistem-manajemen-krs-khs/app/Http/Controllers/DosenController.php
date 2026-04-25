@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Matkul;
 use App\Models\Semester;
 use App\Models\Krs;
+use Illuminate\Support\Facades\Auth;
 
 class DosenController extends Controller
 {
@@ -17,7 +18,7 @@ class DosenController extends Controller
     //  INI UNTUK LIST KELAS DOSEN
     public function kelas()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $semesterAktif = Semester::where('is_active', 1)->first();
 
