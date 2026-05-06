@@ -1,8 +1,6 @@
 @extends('layouts.mahasiswa')
-@section('title', '')
+@section('title', 'Kartu Hasil studi')
 @section('content')
-
-<h2 class="text-2xl font-bold mb-6">Kartu Hasil Studi (KHS)</h2>
 
 <!-- IPK -->
 <div class="mb-6 bg-white p-5 rounded-xl shadow">

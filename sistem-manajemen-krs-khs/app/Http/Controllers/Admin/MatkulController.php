@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Matkul;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class MatkulController extends Controller
 {
@@ -26,19 +27,20 @@ class MatkulController extends Controller
             ->orderByRaw('CAST(REGEXP_SUBSTR(kode_mk, "[0-9]+") AS UNSIGNED)')
             ->get();
 
-        return view('pages.admin.matkul.index', compact('matkuls', 'semester'));
+        $dosens = User::where('role', 'dosen')->get();
+
+        return view('pages.admin.matkul.index', compact('matkuls', 'semester', 'dosens'));
     }
 
-    // =========================
     // STORE
-    // =========================
     public function store(Request $request)
     {
         $request->validate([
             'kode_mk' => 'required',
             'nama_mk' => 'required',
             'sks' => 'required|integer',
-            'semester' => 'required|integer'
+            'semester' => 'required|integer',
+            'dosen_id' => 'required|exists:users,id'
         ]);
 
         Matkul::create($request->all());
@@ -46,9 +48,7 @@ class MatkulController extends Controller
         return back()->with('success', 'Matkul berhasil ditambahkan');
     }
 
-    // =========================
     // UPDATE
-    // =========================
     public function update(Request $request, $id)
     {
         $matkul = Matkul::findOrFail($id);
@@ -57,7 +57,8 @@ class MatkulController extends Controller
             'kode_mk' => 'required',
             'nama_mk' => 'required',
             'sks' => 'required|integer',
-            'semester' => 'required|integer'
+            'semester' => 'required|integer',
+            'dosen_id' => 'required|exists:users,id'
         ]);
 
         $matkul->update($request->all());
@@ -65,9 +66,7 @@ class MatkulController extends Controller
         return back()->with('success', 'Matkul berhasil diupdate');
     }
 
-    // =========================
     // DELETE
-    // =========================
     public function destroy($id)
     {
         Matkul::findOrFail($id)->delete();

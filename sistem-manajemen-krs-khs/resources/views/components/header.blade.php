@@ -5,5 +5,6 @@
         <a href="/pages/home" class="hover:text-gray-300">Home</a>
         <a href="/pages/about" class="hover:text-gray-300">About</a>
         <a href="/pages/contact" class="hover:text-gray-300">Contact</a>
+        <a href="/login" class="hover:text-gray-300">Login</a>
     </div>
 </nav>

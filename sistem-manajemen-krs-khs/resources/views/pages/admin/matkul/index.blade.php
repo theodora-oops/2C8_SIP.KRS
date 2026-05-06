@@ -33,6 +33,7 @@
                 <th class="p-3">Nama</th>
                 <th class="p-3">SKS</th>
                 <th class="p-3">Semester</th>
+                <th class="p-3">Dosen</th>
                 <th class="p-3">Aksi</th>
             </tr>
         </thead>
@@ -44,20 +45,27 @@
                 <td class="p-3">{{ $mk->nama_mk }}</td>
                 <td class="p-3">{{ $mk->sks }}</td>
                 <td class="p-3">{{ $mk->semester }}</td>
+
                 <td class="p-3">
+                    {{ $mk->dosen->name ?? '-' }}
+                </td>
 
-                    <x-button class="bg-yellow-400 btn-edit" data-id="{{ $mk->id }}" data-kode="{{ $mk->kode_mk }}"
-                        data-nama="{{ $mk->nama_mk }}" data-sks="{{ $mk->sks }}" data-semester="{{ $mk->semester }}">
-                        Edit
-                    </x-button>
-
-                    <form method="POST" action="{{ route('matkul.destroy',$mk->id) }}" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <x-button class="bg-red-500">
-                            Hapus
+                <td class="p-3">
+                    <div class="flex gap-2 justify-center">
+                        <x-button class="bg-yellow-400 text-sm px-5 py-2 btn-edit" data-id="{{ $mk->id }}"
+                            data-kode="{{ $mk->kode_mk }}" data-nama="{{ $mk->nama_mk }}" data-sks="{{ $mk->sks }}"
+                            data-semester="{{ $mk->semester }}" data-dosen="{{ $mk->dosen_id }}">
+                            Edit
                         </x-button>
-                    </form>
+
+                        <form method="POST" action="{{ route('matkul.destroy',$mk->id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <x-button class="bg-red-500 text-sm px-5 py-2">
+                                Hapus
+                            </x-button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             @endforeach
@@ -77,18 +85,42 @@
             <input type="text" name="nama_mk" id="nama" placeholder="Nama MK" class="w-full border p-2 mb-2">
             <input type="number" name="sks" id="sks" placeholder="SKS" class="w-full border p-2 mb-2">
 
-            <select name="semester" id="semester" class="w-full border p-2 mb-4">
+            <!-- SEMESTER -->
+            <select name="semester" id="semester" class="w-full border p-2 mb-2 rounded text-gray-500">
+                <option value="" disabled selected>Pilih Semester</option>
                 @for($i=1;$i<=6;$i++) <option value="{{ $i }}">Semester {{ $i }}</option>
                     @endfor
             </select>
 
-            <button class="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
+            <!-- DOSEN -->
+            <select name="dosen_id" id="dosen_id" class="w-full border p-2 mb-4">
+                <option value="">-- Pilih Dosen --</option>
+                @foreach($dosens as $dosen)
+                <option value="{{ $dosen->id }}">
+                    {{ $dosen->name }}
+                </option>
+                @endforeach
+            </select>
+
+            <x-button class="bg-blue-500 text-white px-3 py-1 rounded w-full">
+                Simpan
+            </x-button>
 
         </form>
     </div>
 </div>
 
 <script>
+    const modal = document.getElementById('modal');
+    const formMatkul = document.getElementById('formMatkul');
+    const methodField = document.getElementById('methodField');
+
+    const kode = document.getElementById('kode');
+    const nama = document.getElementById('nama');
+    const sks = document.getElementById('sks');
+    const semester = document.getElementById('semester');
+    const dosen_id = document.getElementById('dosen_id');
+
     function openModal() {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -99,6 +131,8 @@
         kode.value = '';
         nama.value = '';
         sks.value = '';
+        semester.value = '';
+        dosen_id.value = '';
     }
 
     document.querySelectorAll('.btn-edit').forEach(btn => {
@@ -112,8 +146,9 @@
             nama.value = this.dataset.nama;
             sks.value = this.dataset.sks;
             semester.value = this.dataset.semester;
+            dosen_id.value = this.dataset.dosen;
         }
-    })
+    });
 
 </script>
 

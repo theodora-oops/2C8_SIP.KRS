@@ -2,16 +2,32 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // ================= DEFAULT =================
 Route::get('/', function () {
-    return view('welcome');
+     return redirect('/pages/home');
 });
 
-// ================= DASHBOARD =================
 Route::get('/dashboard', function () {  
     return view('pages.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+ })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::get('/redirect-role', function () {
+    $user = Auth::user();
+
+    if ($user->role == 'admin') {
+        return redirect('/admin/dashboard');
+    } elseif ($user->role == 'dosen') {
+        return redirect('/dosen/dashboard');
+    } elseif ($user->role == 'mahasiswa') {
+        return redirect('/mahasiswa/dashboard');
+    }
+
+    return redirect('/');
+})->middleware('auth');
+
 
 // ================= PROFILE =================
 Route::middleware('auth')->group(function () {
@@ -61,10 +77,14 @@ use App\Http\Controllers\DosenController;
 
 Route::middleware(['auth','role:dosen'])
     ->prefix('dosen')
+    ->name('dosen.')
     ->group(function () {
-        Route::get('/dashboard', [DosenController::class, 'dashboard']);
-        Route::get('/kelas', [DosenController::class, 'kelas']);
-        Route::get('/kelas/{id}', [DosenController::class, 'detailKelas']);
+
+        Route::get('/dashboard', [DosenController::class, 'dashboard'])->name('dashboard');
+        Route::get('/kelas', [DosenController::class, 'kelas'])->name('kelas');
+        Route::get('/kelas/{id}', [DosenController::class, 'detailKelas'])->name('detail_kelas');
+        Route::get('/nilai', [DosenController::class, 'inputNilai'])->name('nilai'); 
+        Route::post('/nilai/simpan', [DosenController::class, 'simpanNilai'])->name('nilai.simpan');
 });
 
 // ================= MAHASISWA =================
@@ -83,7 +103,7 @@ Route::get('/mahasiswa/riwayat-krs', [KrsController::class, 'riwayat']);
 Route::get('/mahasiswa/khs', [KrsController::class, 'khs']);
 
 
-// ================= PRAKTIKUM 6 =================
+// ================= PRAKTIKUM 6 PW =================
 
 // PRODUCT 
 use App\Http\Controllers\ProductController;
