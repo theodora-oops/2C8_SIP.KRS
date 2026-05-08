@@ -22,20 +22,9 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
 
             {{-- SEMESTER --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1.5">Semester</label>
-                <select name="semester_id" id="semesterSelect"
-                        class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-700
-                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
-                    <option value="">-- Pilih Semester --</option>
-                    @foreach($semesters as $sem)
-                    <option value="{{ $sem->id }}"
-                        {{ request('semester_id') == $sem->id ? 'selected' : '' }}>
-                        {{ $sem->nama }} ({{ $sem->tahun_ajaran }})
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+            <form method="GET" action="{{ route('dosen.nilai') }}" id="filterForm">
+
+            <input type="hidden" name="semester_id" value="2">
 
             {{-- MATA KULIAH --}}
             <div>
@@ -61,11 +50,22 @@
                         class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-700
                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
                     <option value="">-- Semua Kelas --</option>
-                    @foreach(['A','B','C','D'] as $k)
-                    <option value="{{ $k }}" {{ request('kelas') == $k ? 'selected' : '' }}>
-                        Kelas {{ $k }}
+
+                    <option value="1" {{ request('kelas') == '1' ? 'selected' : '' }}>
+                        Kelas A
                     </option>
-                    @endforeach
+
+                    <option value="2" {{ request('kelas') == '2' ? 'selected' : '' }}>
+                        Kelas B
+                    </option>
+
+                    <option value="3" {{ request('kelas') == '3' ? 'selected' : '' }}>
+                        Kelas C
+                    </option>
+
+                    <option value="4" {{ request('kelas') == '4' ? 'selected' : '' }}>
+                        Kelas D
+                    </option>
                 </select>
             </div>
 
@@ -102,7 +102,7 @@
             <table class="w-full text-sm">
                 <thead>
                     <tr class="bg-blue-50 border-b border-blue-100">
-                        <th class="text-left px-6 py-3.5 font-semibold text-gray-600 uppercase tracking-wide text-xs w-36">NIM</th>
+                        <th class="text-left px-6 py-3.5 font-semibold text-gray-600 uppercase tracking-wide text-xs w-36">EMAIL</th>
                         <th class="text-left px-6 py-3.5 font-semibold text-gray-600 uppercase tracking-wide text-xs">NAMA</th>
                         <th class="text-center px-4 py-3.5 font-semibold text-gray-600 uppercase tracking-wide text-xs w-32">TUGAS</th>
                         <th class="text-center px-4 py-3.5 font-semibold text-gray-600 uppercase tracking-wide text-xs w-32">UTS</th>
@@ -113,9 +113,9 @@
                 <tbody class="divide-y divide-gray-100" id="tableBody">
                     @foreach($mahasiswas as $i => $krs)
                     <tr class="hover:bg-gray-50 transition">
-                        {{-- NIM --}}
+                        {{-- EMAIL --}}
                         <td class="px-6 py-4 text-gray-600 font-mono text-xs">
-                            {{ $krs->mahasiswa->nim ?? $krs->mahasiswa->email ?? '-' }}
+                            {{ $krs->mahasiswa->email ?? $krs->mahasiswa->email ?? '-' }}
                         </td>
 
                         {{-- NAMA --}}
