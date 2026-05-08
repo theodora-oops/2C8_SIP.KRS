@@ -1,8 +1,6 @@
 @extends('layouts.mahasiswa')
-@section('title', '')
+@section('title', 'Pengisian KRS')
 @section('content')
-
-<h2 class="text-2xl font-bold mb-2">Pengisian KRS</h2>
 
 <!-- INFO USER -->
 <div class="mb-6 text-gray-600 bg-white p-4 rounded shadow">

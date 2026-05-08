@@ -1,8 +1,7 @@
 @extends('layouts.mahasiswa')
+@section('title', 'Riwayat KRS')
 
 @section('content')
-
-<h2 class="text-2xl font-bold mb-6">Riwayat KRS</h2>
 
 <div class="space-y-6">
 
