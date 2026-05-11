@@ -115,7 +115,7 @@ Route::prefix('pages')->group(function () {
 
     Route::get('/home', function () {
         return view('pages.home', [
-            'nama' => 'Yohana',
+            'nama' => 'Enif',
             'pekerjaan' => 'Mahasiswa',
         ]);
     });

@@ -54,7 +54,9 @@ class DosenController extends Controller
                         ->with('mahasiswa');
 
             if ($request->filled('kelas')) {
-                $query->where('kelas', $request->kelas);
+                $query->whereHas('mahasiswa', function ($q) use ($request) {
+                    $q->where('kelas', $request->kelas);
+                });
             }
 
             $mahasiswas = $query->get();
@@ -70,22 +72,42 @@ class DosenController extends Controller
     {
         if ($request->has('tugas')) {
             foreach ($request->tugas as $krs_id => $tugas) {
-                $uts   = (float)($request->uts[$krs_id] ?? 0);
-                $uas   = (float)($request->uas[$krs_id] ?? 0);
-                $tugas = (float)$tugas;
+                $uts   = (float) ($request->uts[$krs_id] ?? 0);
+                $uas   = (float) ($request->uas[$krs_id] ?? 0);
+                $tugas = (float) $tugas;
+                
+                // hitung nilai akhir 
+                $nilaiAkhir = round(
+                    ($tugas * 0.3) +
+                    ($uts * 0.3) +
+                    ($uas * 0.4),
+                    2
+                );
 
-                // Rumus: 30% Tugas + 30% UTS + 40% UAS
-                $nilai = round(($tugas * 0.3) + ($uts * 0.3) + ($uas * 0.4), 2);
+                // convert ke huruf
+                if ($nilaiAkhir >= 85) {
+                    $nilaiHuruf = 'A';
+                    } elseif ($nilaiAkhir >= 70) {
+                        $nilaiHuruf = 'B';
+                    } elseif ($nilaiAkhir >= 55) {
+                        $nilaiHuruf = 'C';
+                    } elseif ($nilaiAkhir >= 40) {
+                        $nilaiHuruf = 'D';
+                    } else {
+                        $nilaiHuruf = 'E';
+                }
 
                 Krs::where('id', $krs_id)->update([
                     'tugas' => $tugas,
                     'uts'   => $uts,
                     'uas'   => $uas,
-                    'nilai' => $nilai,
-                ]);
-            }
-        }
 
-        return back()->with('success', 'Nilai berhasil disimpan!');
+                    // simpan huruf
+                    'nilai' => $nilaiHuruf,
+                ]); 
+        }
+    }
+    
+    return back()->with('success', 'Nilai berhasil disimpan!');
     }
 }

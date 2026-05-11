@@ -12,7 +12,7 @@
 <!-- HEADER -->
 <div class="flex justify-between items-center mb-4">
 
-    <x-button class="bg-blue-500">
+    <x-button class="bg-blue-500" onclick="openModal()">
         + Tambah Pengguna
     </x-button>
 

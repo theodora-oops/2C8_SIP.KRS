@@ -11,19 +11,20 @@ class KrsController extends Controller
 {
     public function index(Request $request)
     {
-        $semester = $request->semester ?? 1;
+        $user = Auth::user();
+        $userId = $user->id;
 
-        $matkuls = Matkul::where('semester', $semester)->orderBy('kode_mk', 'asc')->get();
+        $currentSemester = $user->semester;
+        $semester = $request->semester ?? $currentSemester;
 
-        $userId = Auth::id();
+        $matkuls = Matkul::where('semester', $semester)
+            ->orderBy('kode_mk', 'asc')
+            ->get();
 
         // ambil KRS user
         $krs = Krs::where('user_id', $userId)
-                  ->pluck('matkul_id')
-                  ->toArray();
-
-        // semester aktif 
-        $currentSemester = 2;
+            ->pluck('matkul_id')
+            ->toArray();
 
         return view('pages.mahasiswa.krs', compact(
             'matkuls',
@@ -69,58 +70,63 @@ class KrsController extends Controller
 
     return view('pages.mahasiswa.riwayat-krs', compact('krs'));
     }
-
+    
     public function khs()
     {
-        $userId = \Illuminate\Support\Facades\Auth::id();
-        
-        $krs = \App\Models\Krs::with('matkul')
+        $userId = Auth::id();
+
+        $krs = Krs::with('matkul')
             ->where('user_id', $userId)
             ->get()
-            ->groupBy(function ($item) {
-                return $item->matkul->semester;
-            });
-            
-        $bobotNilai = [
+            ->groupBy(fn ($item) => $item->matkul->semester);
+
+        $bobot = [
             'A' => 4,
             'B' => 3,
             'C' => 2,
             'D' => 1,
             'E' => 0
         ];
-        
-        $ipkTotal = 0;
-        $totalSksAll = 0;
-        
-        $hasil = [];
-        
-        foreach ($krs as $semester => $items) {
-            $totalSks = 0;
-            $totalNilai = 0;
-            
-            foreach ($items as $k) {
-                $sks = $k->matkul->sks;
-                $nilai = $bobotNilai[$k->nilai] ?? 0;
-                
-                $totalSks += $sks;
-                $totalNilai += ($nilai * $sks);
-            }
-            
-            $ips = $totalSks ? $totalNilai / $totalSks : 0;
-            
-            $ipkTotal += $totalNilai;
-            $totalSksAll += $totalSks;
 
-            $hasil[$semester] = [
-                'data' => $items,
-                'ips' => round($ips, 2),
-                'total_sks' => $totalSks
-            ];
+        $hasil = [];
+
+        $totalSksAll = 0;
+        $totalBobotAll = 0;
+
+        foreach ($krs as $semester => $items) {
+
+        $sksSemester = 0;
+        $bobotSemester = 0;
+
+        foreach ($items as $k) {
+
+            if (empty($k->nilai)) continue;
+
+            $sks = $k->matkul->sks;
+            $nilai = $bobot[$k->nilai] ?? 0;
+
+            $sksSemester += $sks;
+            $bobotSemester += ($nilai * $sks);
         }
-        
-        $ipk = $totalSksAll ? round($ipkTotal / $totalSksAll, 2) : 0;
-        
-        return view('pages.mahasiswa.khs', compact('hasil', 'ipk'));
-        
+
+        $ips = $sksSemester
+            ? round($bobotSemester / $sksSemester, 2)
+            : 0;
+
+        $totalSksAll += $sksSemester;
+        $totalBobotAll += $bobotSemester;
+
+        $hasil[$semester] = [
+            'data' => $items,
+            'ips' => $ips,
+            'total_sks' => $sksSemester
+        ];
     }
+
+    $ipk = $totalSksAll
+        ? round($totalBobotAll / $totalSksAll, 2)
+        : 0;
+
+    return view('pages.mahasiswa.khs', compact('hasil', 'ipk'));
+}
 }
