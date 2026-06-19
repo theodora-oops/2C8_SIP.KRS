@@ -166,20 +166,20 @@
             <ul class="navbar-nav ms-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#home">Home</a>
+                    <a class="nav-link" href="#home">Beranda</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
+                    <a class="nav-link" href="#about">Tentang</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#contact">Contact</a>
+                    <a class="nav-link" href="#contact">Kontak</a>
                 </li>
 
                 <li class="nav-item ms-lg-3">
                     <a href="{{ route('login') }}" class="btn btn-primary">
-                        Login
+                        Masuk
                     </a>
                 </li>
 
