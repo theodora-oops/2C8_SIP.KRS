@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Krs;
 
 class Matkul extends Model
 {
+    protected $table = 'matkuls';
+
     protected $fillable = [
         'kode_mk',
         'nama_mk',
@@ -18,10 +18,10 @@ class Matkul extends Model
 
     public function dosen()
     {
-        return $this->belongsTo(User::class, 'dosen_id');
+        return $this->belongsTo(Dosen::class, 'dosen_id');
     }
 
-    public function krs(): HasMany
+    public function krs()
     {
         return $this->hasMany(Krs::class, 'matkul_id');
     }

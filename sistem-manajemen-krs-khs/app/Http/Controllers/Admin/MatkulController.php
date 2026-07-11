@@ -5,47 +5,54 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Matkul;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use App\Models\Dosen;
 
 class MatkulController extends Controller
 {
     // LIST
     public function index(Request $request)
     {
-        $semester = $request->semester;
+        $semester = $request->semester ?? 'all';
 
-        $query = Matkul::query();
+        $query = Matkul::with('dosen');
 
-        if ($semester && $semester != 'all') {
+        if ($semester != 'all') {
             $query->where('semester', $semester);
         }
 
-        // sorting by semester and then by numeric part of kode_mk
         $matkuls = $query
             ->orderBy('semester', 'asc')
             ->orderByRaw('CAST(REGEXP_SUBSTR(kode_mk, "[0-9]+") AS UNSIGNED)')
             ->get();
 
-        $dosens = User::where('role', 'dosen')->get();
+        $dosens = Dosen::orderBy('nama')->get();
 
-        return view('pages.admin.matkul.index', compact('matkuls', 'semester', 'dosens'));
+        return view(
+            'pages.admin.matkul.index',
+            compact('matkuls', 'semester', 'dosens')
+        );
     }
 
     // STORE
     public function store(Request $request)
     {
         $request->validate([
-            'kode_mk' => 'required',
-            'nama_mk' => 'required',
-            'sks' => 'required|integer',
-            'semester' => 'required|integer',
-            'dosen_id' => 'required|exists:users,id'
+            'kode_mk' => 'required|unique:matkuls,kode_mk',
+            'nama_mk' => 'required|string|max:255',
+            'sks' => 'required|integer|min:1|max:6',
+            'semester' => 'required|integer|min:1|max:4',
+            'dosen_id' => 'required|exists:dosens,id'
         ]);
 
-        Matkul::create($request->all());
+        Matkul::create([
+            'kode_mk' => strtoupper($request->kode_mk),
+            'nama_mk' => $request->nama_mk,
+            'sks' => $request->sks,
+            'semester' => $request->semester,
+            'dosen_id' => $request->dosen_id
+        ]);
 
-        return back()->with('success', 'Matkul berhasil ditambahkan');
+        return back()->with('success', 'Mata kuliah berhasil ditambahkan');
     }
 
     // UPDATE
@@ -54,16 +61,22 @@ class MatkulController extends Controller
         $matkul = Matkul::findOrFail($id);
 
         $request->validate([
-            'kode_mk' => 'required',
-            'nama_mk' => 'required',
-            'sks' => 'required|integer',
-            'semester' => 'required|integer',
-            'dosen_id' => 'required|exists:users,id'
+            'kode_mk' => 'required|unique:matkuls,kode_mk,' . $matkul->id,
+            'nama_mk' => 'required|string|max:255',
+            'sks' => 'required|integer|min:1|max:6',
+            'semester' => 'required|integer|min:1|max:4',
+            'dosen_id' => 'required|exists:dosens,id'
         ]);
 
-        $matkul->update($request->all());
+        $matkul->update([
+            'kode_mk' => strtoupper($request->kode_mk),
+            'nama_mk' => $request->nama_mk,
+            'sks' => $request->sks,
+            'semester' => $request->semester,
+            'dosen_id' => $request->dosen_id
+        ]);
 
-        return back()->with('success', 'Matkul berhasil diupdate');
+        return back()->with('success', 'Mata kuliah berhasil diupdate');
     }
 
     // DELETE
@@ -71,6 +84,6 @@ class MatkulController extends Controller
     {
         Matkul::findOrFail($id)->delete();
 
-        return back()->with('success', 'Matkul dihapus');
+        return back()->with('success', 'Mata kuliah berhasil dihapus');
     }
 }

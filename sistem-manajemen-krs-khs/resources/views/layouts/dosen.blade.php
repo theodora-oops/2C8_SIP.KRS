@@ -4,164 +4,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dosen - SIP.KRS</title>
+    <title>SIP.KRS</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- ALPINE JS -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+</style>
+
+<div style="font-family: 'Inter', sans-serif;">
 
 <body class="bg-gray-100 font-sans">
 
-<div x-data="{ openSidebar: false }" class="min-h-screen">
+    <div x-data="{ openSidebar: false, sidebarOpen: true }" class="min-h-screen">
 
-    <!-- MOBILE TOPBAR -->
-    <div class="md:hidden bg-slate-800 text-white flex items-center justify-between px-4 py-3">
+        <div class="flex min-h-screen">
 
-        <h1 class="text-xl font-bold">
-            SIP.KRS
-        </h1>
-
-        <!-- HAMBURGER -->
-        <button @click="openSidebar = true" class="text-2xl">
-            ☰
-        </button>
-
-    </div>
-
-    <div class="flex min-h-screen">
-
-        <!-- OVERLAY -->
-        <div
-            x-show="openSidebar"
-            @click="openSidebar = false"
-            class="fixed inset-0 bg-black/50 z-40 md:hidden"
-            x-transition>
-        </div>
-
-        <!-- SIDEBAR -->
-        <aside
-            class="fixed md:static top-0 left-0 z-50 w-64 bg-slate-800 text-white min-h-screen p-5 flex flex-col
-            transform transition-transform duration-300
-            -translate-x-full md:translate-x-0"
-            :class="{ 'translate-x-0': openSidebar }">
-
-            <!-- HEADER -->
-            <div class="flex items-center justify-between md:block">
-
-                <!-- LOGO -->
-                <h2 class="text-2xl font-bold mb-0 md:mb-8 text-center">
-                    SIP.KRS
-                </h2>
-
-                <!-- CLOSE -->
-                <button
-                    @click="openSidebar = false"
-                    class="md:hidden text-2xl">
-                    ✕
-                </button>
-
+            <!-- OVERLAY MOBILE -->
+            <div x-show="openSidebar"
+                @click="openSidebar = false"
+                class="fixed inset-0 bg-black/50 z-40 md:hidden">
             </div>
 
-            <!-- MENU -->
-            <nav class="space-y-2 flex-1 mt-8 md:mt-0">
+            <!-- SIDEBAR -->
+            <aside class="fixed md:relative z-50 bg-white min-h-screen transition-all duration-300"
+                :class="[sidebarOpen ? 'w-64' : 'w-16',
+                openSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0']">
 
-                <a href="/dosen/dashboard"
-                    class="block px-4 py-2 rounded transition
-                    {{ request()->is('dosen/dashboard') ? 'bg-slate-700' : 'hover:bg-slate-700' }}">
+                <!-- HEADER SIDEBAR -->
+                <div class="h-16 flex items-center justify-center text-white"
+                    style="background-color: #0f766e">
 
-                    Dashboard
-                </a>
+                    <h2 x-show="sidebarOpen"
+                        x-transition
+                        class="text-2xl font-bold">
 
-                <a href="/dosen/kelas"
-                    class="block px-4 py-2 rounded transition
-                    {{ request()->is('dosen/kelas*') ? 'bg-slate-700' : 'hover:bg-slate-700' }}">
+                        SIP.KRS
 
-                    Kelas Diampu
-                </a>
-
-                <a href="/dosen/nilai"
-                    class="block px-4 py-2 rounded transition
-                    {{ request()->is('dosen/nilai*') ? 'bg-slate-700' : 'hover:bg-slate-700' }}">
-
-                    Input Nilai
-                </a>
-
-            </nav>
-
-            <!-- FOOTER -->
-            <div class="text-sm text-gray-400 text-center mt-6">
-                © {{ date('Y') }} SIP.KRS
-            </div>
-
-        </aside>
-
-        <!-- MAIN -->
-        <div class="flex-1 flex flex-col w-full">
-
-            <!-- NAVBAR -->
-            <header class="bg-white shadow px-4 md:px-6 py-4 flex justify-between items-center">
-
-                <!-- TITLE -->
-                <h1 class="text-lg md:text-xl font-semibold">
-                    @yield('title')
-                </h1>
-
-                <!-- RIGHT -->
-                <div class="flex items-center gap-2 md:gap-4">
-
-                    <!-- USER INFO -->
-                    <div class="text-right hidden sm:block">
-                        <p class="font-medium text-sm md:text-base">
-                            {{ auth()->user()->name }}
-                        </p>
-
-                        <p class="text-xs md:text-sm text-gray-500">
-                            {{ auth()->user()->email }}
-                        </p>
-                    </div>
-
-                    <!-- PROFILE -->
-                    <img
-                        src="https://i.pravatar.cc/40?u={{ auth()->user()->id }}"
-                        class="w-9 h-9 md:w-10 md:h-10 rounded-full border"
-                        alt="profile">
-
-                    <!-- LOGOUT -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <button class="p-2 rounded-full hover:bg-red-100 transition">
-
-                            <svg class="w-5 h-5 md:w-6 md:h-6 text-red-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24">
-
-                                <path stroke-width="2"
-                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h5a2 2 0 012 2v1" />
-
-                            </svg>
-
-                        </button>
-
-                    </form>
+                    </h2>
 
                 </div>
 
-            </header>
+                <!-- MENU -->
+                <nav class="mt-4 px-2 space-y-1">
 
-            <!-- CONTENT -->
-            <main class="p-4 md:p-6">
-                @yield('content')
-            </main>
+                    <!-- Dashboard -->
+                    <a href="/dosen/dashboard"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                        {{ request()->is('dosen/dashboard') ? 'bg-teal-100 text-teal-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 10.5L12 4l7 6.5V19a1 1 0 01-1 1h-4v-5H10v5H6a1 1 0 01-1-1v-8.5z"/>
+                        </svg>
+
+                        <span x-show="sidebarOpen">
+                            Beranda
+                        </span>
+
+                    </a>
+
+                    <!-- Kelas Diampu -->
+                    <a href="/dosen/kelas"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                        {{ request()->is('dosen/kelas*') ? 'bg-teal-100 text-teal-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+
+                        <span x-show="sidebarOpen">
+                            Kelas Diampu
+                        </span>
+
+                    </a>
+
+                    <!-- Input Nilai -->
+                    <a href="/dosen/nilai"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                        {{ request()->is('dosen/nilai*') ? 'bg-teal-100 text-teal-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"/>
+                        </svg>
+
+                        <span x-show="sidebarOpen">
+                            Input Nilai
+                        </span>
+
+                    </a>
+
+                </nav>
+
+                <!-- FOOTER -->
+                <div class="absolute bottom-5 left-0 w-full text-center text-gray-400 text-sm"
+                    x-show="sidebarOpen">
+
+                    © {{ date('Y') }} SIP.KRS
+
+                </div>
+
+            </aside>
+
+            <!-- MAIN -->
+            <div class="flex-1 flex flex-col min-w-0">
+
+                <!-- NAVBAR -->
+                <div style="background-color: #0f766e">
+                    <x-navbar :title="View::yieldContent('title')" />
+                </div>
+
+                <!-- CONTENT -->
+                <main class="flex-1 p-6 overflow-x-auto">
+                    @yield('content')
+                </main>
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>
+</div>
 </html>

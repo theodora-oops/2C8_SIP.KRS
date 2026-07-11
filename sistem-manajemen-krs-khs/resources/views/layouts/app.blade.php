@@ -4,123 +4,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIP.KRS</title>
+    <title>Admin - SIP.KRS</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-<body class="bg-gray-100 font-sans">
+</style>
 
-<div x-data="{ openSidebar: false }" class="min-h-screen">
+<div style="font-family: 'Inter', sans-serif;">
 
-    <!-- MOBILE TOPBAR -->
-    <div class="md:hidden bg-slate-900 text-white flex items-center justify-between p-4">
+    <body class="bg-gray-100 font-sans">
 
-        <h1 class="text-xl font-bold">
-            SIP.KRS
-        </h1>
+        <div x-data="{ openSidebar: false, sidebarOpen: true }" class="min-h-screen">
 
-        <!-- BUTTON HAMBURGER -->
-        <button @click="openSidebar = true" class="text-2xl">
-            ☰
-        </button>
-    </div>
+            <div class="flex min-h-screen">
 
-    <div class="flex min-h-screen">
+                <!-- OVERLAY MOBILE -->
+                <div x-show="openSidebar" @click="openSidebar = false" class="fixed inset-0 bg-black/50 z-40 md:hidden">
+                </div>
 
-        <!-- OVERLAY MOBILE -->
-        <div
-            x-show="openSidebar"
-            @click="openSidebar = false"
-            class="fixed inset-0 bg-black/50 z-40 md:hidden"
-            x-transition>
-        </div>
+                <!-- SIDEBAR -->
+                <aside class="fixed md:relative z-50 bg-white min-h-screen transition-all duration-300"
+                    :class="[sidebarOpen ? 'w-64' : 'w-16', openSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0']">
 
-        <!-- SIDEBAR -->
-        <aside
-            class="fixed md:static top-0 left-0 z-50 w-64 bg-slate-900 text-gray-200 p-5 flex flex-col min-h-screen
-            transform transition-transform duration-300
-            -translate-x-full md:translate-x-0"
-            :class="{ 'translate-x-0': openSidebar }">
+                    <!-- HEADER SIDEBAR -->
+                    <div class="h-16 flex items-center justify-center bg-indigo-700 text-white"
+                        style="background-color: #2e2970">
 
-            <!-- HEADER MOBILE -->
-            <div class="flex items-center justify-between md:block">
+                        <h2 x-show="sidebarOpen" x-transition class="text-2xl font-bold">
 
-                <h2 class="text-2xl font-bold mb-0 md:mb-10 text-white tracking-wide">
-                    SIP.KRS
-                </h2>
+                            SIP.KRS
 
-                <!-- CLOSE BUTTON -->
-                <button
-                    @click="openSidebar = false"
-                    class="md:hidden text-2xl">
-                    ✕
-                </button>
+                        </h2>
+
+                    </div>
+
+                    <!-- MENU -->
+                    <nav class="mt-4 px-2 space-y-1">
+
+                        <!-- Dashboard -->
+                        <a href="/admin/dashboard"
+                            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+            {{ request()->is('admin/dashboard') ? 'bg-indigo-100 text-indigo-700 font-bold shadow-sm' : 'text-gray-500 hover:bg-gray-100 text-gray-700' }}">
+
+                            <!-- ICON -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 10.5L12 4l7 6.5V19a1 1 0 01-1 1h-4v-5H10v5H6a1 1 0 01-1-1v-8.5z"/>
+                            </svg>
+
+                            <span x-show="sidebarOpen">
+                                Beranda
+                            </span>
+
+                        </a>
+
+                        <!-- Pengguna -->
+                        <a href="/admin/pengguna"
+                            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+            {{ request()->is('admin/pengguna*') ? 'bg-indigo-100 text-indigo-700 font-bold shadow-sm' : 'text-gray-500 hover:bg-gray-100 text-gray-700' }}">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m8-2.13a4 4 0 10-8 0m8 0a4 4 0 11-8 0" />
+                            </svg>
+
+                            <span x-show="sidebarOpen">
+                                Kelola Pengguna
+                            </span>
+
+                        </a>
+
+                        <!-- Matkul -->
+                        <a href="/admin/matkul"
+                            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+            {{ request()->is('admin/matkul*') ? 'bg-indigo-100 text-indigo-700 font-bold shadow-sm' : 'text-gray-500 hover:bg-gray-100 text-gray-700' }}">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0120 17.944M12 14L5.84 10.578A12.083 12.083 0 004 17.944" />
+                            </svg>
+
+                            <span x-show="sidebarOpen">
+                                Kelola Mata Kuliah
+                            </span>
+
+                        </a>
+
+                        <!-- Semester -->
+                        <a href="/admin/semester"
+                            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+            {{ request()->is('admin/semester*') ? 'bg-indigo-100 text-indigo-700 font-bold shadow-sm' : 'text-gray-500 hover:bg-gray-100 text-gray-700' }}">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+
+                            <span x-show="sidebarOpen">
+                                Kelola Semester
+                            </span>
+
+                        </a>
+
+
+                        <!-- Periode Akademik -->
+                        <a href="/admin/periods"
+                            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                        {{ request()->is('admin/periods*') ? 'bg-indigo-100 text-indigo-700 font-bold shadow-sm' : 'text-gray-500 hover:bg-gray-100 text-gray-700' }}">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                            </svg>
+
+                            <span x-show="sidebarOpen">
+                                Periode Akademik
+                            </span>
+
+                        </a>
+
+                    </nav>
+
+                    <!-- FOOTER -->
+                    <div class="absolute bottom-5 left-0 w-full text-center text-gray-400 text-sm" x-show="sidebarOpen">
+
+                        © {{ date('Y') }} SIP.KRS
+
+                    </div>
+
+                </aside>
+
+                <!-- MAIN -->
+                <div class="flex-1 flex flex-col min-w-0">
+
+                    <!-- NAVBAR -->
+                    <div style="background-color: #2e2970">
+                        <x-navbar :title="View::yieldContent('title')" />
+                    </div>
+
+                    <!-- CONTENT -->
+                    <main class="flex-1 p-6 overflow-x-auto">
+                        @yield('content')
+                    </main>
+
+                </div>
 
             </div>
 
-            <!-- MENU -->
-            <nav class="space-y-2 flex-1 mt-8 md:mt-0">
-
-                <!-- Dashboard -->
-                <a href="/admin/dashboard"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg transition
-                    {{ request()->is('admin/dashboard') ? 'bg-slate-700 text-white' : 'hover:bg-slate-800' }}">
-
-                    <span>Dashboard</span>
-                </a>
-
-                <!-- Pengguna -->
-                <a href="/admin/pengguna"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg transition
-                    {{ request()->is('admin/pengguna*') ? 'bg-slate-700 text-white' : 'hover:bg-slate-800' }}">
-
-                    <span>Kelola Pengguna</span>
-                </a>
-
-                <!-- Matkul -->
-                <a href="/admin/matkul"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg transition
-                    {{ request()->is('admin/matkul*') ? 'bg-slate-700 text-white' : 'hover:bg-slate-800' }}">
-
-                    <span>Kelola Matkul</span>
-                </a>
-
-                <!-- Semester -->
-                <a href="/admin/semester"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg transition
-                    {{ request()->is('admin/semester*') ? 'bg-slate-700 text-white' : 'hover:bg-slate-800' }}">
-
-                    <span>Kelola Semester</span>
-                </a>
-
-            </nav>
-
-            <!-- FOOTER -->
-            <div class="text-sm text-gray-400 text-center mt-6">
-                © {{ date('Y') }} SIP.KRS
-            </div>
-
-        </aside>
-
-        <!-- MAIN -->
-        <div class="flex-1 flex flex-col w-full">
-
-            <!-- NAVBAR -->
-            <x-navbar :title="View::yieldContent('title')" />
-
-            <!-- CONTENT -->
-            <main class="p-4 md:p-6">
-                @yield('content')
-            </main>
-
         </div>
-
-    </div>
-
 </div>
 
-<!-- ALPINE JS -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>
+
 </html>

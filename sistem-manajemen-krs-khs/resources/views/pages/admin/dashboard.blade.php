@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'Beranda Admin')
 
 @section('content')
 
 <!-- WELCOME -->
 <div class="mb-6">
     <h2 class="text-2xl font-bold">
-        Selamat Datang, {{ auth()->user()->name }} 👋
+        Selamat Datang, {{ auth()->user()->nama }} 👋
     </h2>
     <p class="text-gray-600">
         Sistem Informasi Akademik (KRS dan KHS)

@@ -2,59 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();
+        switch ($user->role) {
+            case 'admin':
+                $profile = $user->admin;
+                $view = 'pages.admin.profile.index';
+                break;
+
+            case 'dosen':
+                $profile = $user->dosen;
+                $view = 'pages.dosen.profile.index';
+                break;
+            
+            case 'mahasiswa':
+                $profile = $user->mahasiswa;
+                $view = 'pages.mahasiswa.profile.index';
+                break;
+
+            default:
+            abort(403, 'Role tidak dikenali');
+        }
+        
+        return view($view, compact('user', 'profile'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $user = Auth::user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $request->validate([
+            'nama' => 'required',
+            'no_hp' => 'nullable|max:20',
+            'alamat' => 'nullable',
+            'password' => 'nullable|min:8',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ]);
+
+        if ($user->role == 'admin') {
+            $profile = $user->admin;
+        } elseif ($user->role == 'dosen') {
+            $profile = $user->dosen;
+        } else {
+            $profile = $user->mahasiswa;
         }
 
-        $request->user()->save();
+        if ($request->hasFile('foto')) {
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
+            if ($profile->foto &&
+                Storage::disk('public')->exists('foto/'.$profile->foto)) {
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+                Storage::disk('public')
+                    ->delete('foto/'.$profile->foto);
+            }
 
-        $user = $request->user();
+            $filename = time().'.'.$request->foto->extension();
 
-        Auth::logout();
+            $request->foto
+                ->storeAs('foto', $filename, 'public');
 
-        $user->delete();
+            $profile->foto = $filename;
+        }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $profile->nama = $request->nama;
+        $profile->no_hp = $request->no_hp;
+        $profile->alamat = $request->alamat;
 
-        return Redirect::to('/');
+        $profile->save();
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
+
+        return back()->with('success', 'Profil berhasil diperbarui');
     }
 }
