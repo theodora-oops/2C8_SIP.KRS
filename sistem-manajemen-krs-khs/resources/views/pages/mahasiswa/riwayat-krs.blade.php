@@ -10,7 +10,7 @@
 <div class="bg-white p-6 rounded-xl shadow">
 
     <h3 class="text-lg font-semibold mb-4">
-        Semester {{ $semester }}
+        {{ $semester }}
     </h3>
 
     <table class="w-full">

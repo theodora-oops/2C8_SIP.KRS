@@ -3,111 +3,157 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SIP.KRS - Mahasiswa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahasiswa - SIP.KRS</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+</style>
+
+<div style="font-family: 'Inter', sans-serif;">
+
 <body class="bg-gray-100 font-sans">
 
-<div class="flex">
+    <div x-data="{ openSidebar:false, sidebarOpen:true }" class="min-h-screen">
 
-    <!-- SIDEBAR -->
-    <aside class="w-64 bg-blue-900 text-gray-200 min-h-screen p-5 flex flex-col">
+        <div class="flex min-h-screen">
 
-        <!-- LOGO -->
-        <h2 class="text-2xl font-bold mb-10 text-center text-white tracking-wide">
-            SIP.KRS
-        </h2>
+            <!-- Overlay Mobile -->
+            <div x-show="openSidebar" @click="openSidebar=false" class="fixed inset-0 bg-black/50 z-40 md:hidden">
+            </div>
 
-        <!-- MENU -->
-        <nav class="space-y-2 flex-1">
+            <!-- SIDEBAR -->
+            <aside class="fixed md:relative z-50 bg-white min-h-screen transition-all duration-300" :class="[
+                sidebarOpen ? 'w-64' : 'w-16',
+                openSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+            ]">
 
-            <a href="/mahasiswa/dashboard"
-                class="block px-4 py-2 rounded-lg transition
-                {{ request()->is('mahasiswa/dashboard') ? 'bg-blue-700 text-white' : 'hover:bg-blue-800' }}">
-                Dashboard
-            </a>
+                <!-- HEADER -->
+                <div class="h-16 flex items-center justify-center text-white" style="background:#2563eb">
 
-            <a href="/mahasiswa/krs"
-                class="block px-4 py-2 rounded-lg transition
-                {{ request()->is('mahasiswa/krs*') ? 'bg-blue-700 text-white' : 'hover:bg-blue-800' }}">
-                Isi KRS
-            </a>
+                    <h2 x-show="sidebarOpen" x-transition class="text-2xl font-bold">
 
-            <a href="/mahasiswa/riwayat-krs"
-                class="block px-4 py-2 rounded-lg transition
-                {{ request()->is('mahasiswa/riwayat-krs*') ? 'bg-blue-700 text-white' : 'hover:bg-blue-800' }}">
-                Riwayat KRS
-            </a>
+                        SIP.KRS
 
-            <a href="/mahasiswa/khs"
-                class="block px-4 py-2 rounded-lg transition
-                {{ request()->is('mahasiswa/khs*') ? 'bg-blue-700 text-white' : 'hover:bg-blue-800' }}">
-                KHS
-            </a>
+                    </h2>
 
-        </nav>
-
-        <!-- FOOTER -->
-        <div class="text-sm text-gray-300 text-center mt-6">
-            © {{ date('Y') }} SIP.KRS
-        </div>
-
-    </aside>
-
-    <!-- MAIN -->
-    <div class="flex-1 flex flex-col">
-
-        <!-- NAVBAR -->
-        <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-
-            <!-- TITLE -->
-            <h1 class="text-xl font-semibold text-gray-800">
-                @yield('title')
-            </h1>
-
-            <div class="flex items-center gap-4">
-
-                <!-- USER INFO -->
-                <div class="text-right hidden sm:block">
-                    <p class="font-medium text-gray-800">
-                        {{ auth()->user()->name }}
-                    </p>
-                    <p class="text-sm text-gray-500">
-                        {{ auth()->user()->email }}
-                    </p>
                 </div>
 
-                <!-- AVATAR -->
-                <img src="https://i.pravatar.cc/40?u={{ auth()->user()->id }}" class="w-10 h-10 rounded-full border"
-                        alt="profile">
+                <!-- MENU -->
+                <nav class="mt-4 px-2 space-y-1">
 
-                <!-- LOGOUT -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="p-2 rounded-full hover:bg-red-100 transition">
+                    <!-- Dashboard -->
+                    <a href="/mahasiswa/dashboard"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                    {{ request()->is('mahasiswa/dashboard') ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
 
-                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h5a2 2 0 012 2v1"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 10.5L12 4l7 6.5V19a1 1 0 01-1 1h-4v-5H10v5H6a1 1 0 01-1-1v-8.5z" />
+
                         </svg>
 
-                    </button>
-                </form>
+                        <span x-show="sidebarOpen">
+                            Beranda
+                        </span>
+
+                    </a>
+
+                    <!-- Isi KRS -->
+                    <a href="/mahasiswa/krs"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                    {{ request()->is('mahasiswa/krs*') ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 3h8l4 4v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2zm5 5v6m-3-3h6"/>
+
+                        </svg>
+
+                        <span x-show="sidebarOpen">
+                            Isi KRS
+                        </span>
+
+                    </a>
+
+                    <!-- Riwayat -->
+                    <a href="/mahasiswa/riwayat-krs"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                    {{ request()->is('mahasiswa/riwayat-krs*') ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+                        </svg>
+
+                        <span x-show="sidebarOpen">
+                            Riwayat KRS
+                        </span>
+
+                    </a>
+
+                    <!-- KHS -->
+                    <a href="/mahasiswa/khs"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                    {{ request()->is('mahasiswa/khs*') ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'hover:bg-gray-100 text-gray-700' }}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
+
+                        </svg>
+
+                        <span x-show="sidebarOpen">
+                            KHS
+                        </span>
+
+                    </a>
+
+                </nav>
+
+                <!-- FOOTER -->
+                <div class="absolute bottom-5 left-0 w-full text-center text-gray-400 text-sm" x-show="sidebarOpen">
+
+                    © {{ date('Y') }} SIP.KRS
+
+                </div>
+
+            </aside>
+
+            <!-- MAIN -->
+            <div class="flex-1 flex flex-col min-w-0">
+
+                <!-- NAVBAR -->
+                <!-- NAVBAR -->
+                <div style="background-color:#2563eb">
+                    <x-navbar :title="View::yieldContent('title')" />
+                </div>
+
+                <!-- CONTENT -->
+                <main class="flex-1 p-6 overflow-x-auto">
+                    @yield('content')
+                </main>
 
             </div>
 
-        </header>
-
-        <!-- CONTENT -->
-        <main class="p-6">
-            @yield('content')
-        </main>
+        </div>
 
     </div>
 
-</div>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body>
-
+</div>
 </html>

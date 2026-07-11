@@ -6,15 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Krs extends Model
 {
-    protected $fillable = ['user_id','matkul_id', 'nilai'];
+    protected $table = 'krs';
 
-    public function matkul()
-    {
-        return $this->belongsTo(\App\Models\Matkul::class);
-    }
+    protected $fillable = [
+        'mahasiswa_id',
+        'matkul_id',
+        'semester_id',
+        'status'
+    ];
 
     public function mahasiswa()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Mahasiswa::class);
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class);
+    }
+
+    public function nilai()
+    {
+        return $this->hasOne(Nilai::class);
+    }
+
+    public function matkul()
+    {
+        return $this->belongsTo(Matkul::class);
     }
 }

@@ -13,7 +13,7 @@
 <div class="bg-white p-6 rounded-xl shadow mb-6">
 
     <h3 class="text-lg font-semibold mb-4">
-        Semester {{ $semester }}
+        {{ $semester }}
     </h3>
 
     <table class="w-full">
@@ -33,7 +33,7 @@
                 <td class="p-3">{{ $k->matkul->nama_mk }}</td>
                 <td class="p-3">{{ $k->matkul->sks }}</td>
                 <td class="p-3 font-semibold">
-                    {{ $k->nilai ?? '-' }}
+                    {{ $k->nilai?->nilai ?? '-' }}
                 </td>
             </tr>
             @endforeach
