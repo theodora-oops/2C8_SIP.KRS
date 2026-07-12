@@ -101,7 +101,19 @@
                     </div>
                     <div>
                         <p class="text-white text-xs font-semibold">Semester Aktif</p>
-                        <p class="text-blue-100 text-xs">Genap 2025/2026</p>
+
+                        @if($semesterAktif)
+                        <p class="text-blue-200 text-[11px]">
+                            {{ ucfirst($semesterAktif->tipe) }}
+                            {{ $semesterAktif->tahun_ajaran }}
+                        </p>
+
+                        @else
+                        <p class="text-blue-100 text-xs">
+                            Belum ada semester aktif
+                        </p>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -117,7 +129,7 @@
             <div class="flex gap-6 mt-8">
                 <div>
                     <p class="text-2xl font-bold text-white">3</p>
-                    <p class="text-blue-200 text-xs mt-0.5">Role Pengguna</p>
+                    <p class="text-blue-200 text-xs mt-0.5">Hak Pengguna</p>
                 </div>
                 <div class="w-px bg-white/20"></div>
                 <div>
@@ -183,24 +195,24 @@
                 {{-- EMAIL  --}}
                 <div class="fade-up delay-1">
                     <label for="email" class="block text-sm font-semibold text-gray-700 mb-1.5">
-                        Email Address
+                        Email
                     </label>
                     <input id="email" type="email" name="email"
-                           value="{{ old('email') }}"
-                           required autofocus autocomplete="username"
-                           placeholder="name@kampus.com"
-                           class="input-field w-full border border-gray-200 bg-white rounded-xl px-4 py-3 text-sm text-gray-800
-                                  placeholder-gray-400 focus:outline-none focus:border-blue-500 transition">
+                        value="{{ old('email') }}"
+       required autofocus autocomplete="email"
+       placeholder="name@kampus.com"
+       class="input-field w-full border border-gray-200 bg-white rounded-xl px-4 py-3 text-sm text-gray-800
+              placeholder-gray-400 focus:outline-none focus:border-blue-500 transition">
                 </div>
 
                 {{-- PASSWORD --}}
                 <div class="fade-up delay-2">
                     <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="text-sm font-semibold text-gray-700">Password</label>
+                        <label for="password" class="text-sm font-semibold text-gray-700">Kata Sandi</label>
                         @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}"
                            class="text-xs text-blue-600 hover:text-blue-700 font-medium transition">
-                            Forgot password?
+                            Lupa Kata Sandi?
                         </a>
                         @endif
                     </div>
@@ -227,7 +239,7 @@
                     <input id="remember_me" type="checkbox" name="remember"
                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
                     <label for="remember_me" class="text-sm text-gray-600 cursor-pointer select-none">
-                        Remember Me
+                        Ingat Saya
                     </label>
                 </div>
 
@@ -235,7 +247,7 @@
                 <div class="fade-up delay-4 pt-1">
                     <button type="submit"
                             class="btn-primary w-full text-white font-semibold py-3 rounded-xl text-sm">
-                        Login
+                        Masuk
                     </button>
                 </div>
             </form>
