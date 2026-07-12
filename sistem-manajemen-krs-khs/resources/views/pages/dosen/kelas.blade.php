@@ -2,9 +2,16 @@
 @section('title', 'Kelas Saya')
 @section('content')
 
-<div class="grid md:grid-cols-3 gap-6">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    @forelse($matkuls as $matkul)
+</style>
+
+<div style="font-family: 'Inter', sans-serif;">
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+        @forelse($matkuls as $matkul)
         <div class="bg-white p-5 rounded-2xl shadow-md hover:shadow-xl transition duration-300">
 
             <!-- HEADER -->
@@ -31,15 +38,17 @@
 
             <!-- BUTTON -->
             <a href="{{ route('dosen.detail_kelas', $matkul->id) }}"
-               class="mt-5 inline-block w-full text-center bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition">
-               Lihat Mahasiswa →
+                class="mt-5 inline-block w-full text-center bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition">
+                Lihat Mahasiswa →
             </a>
         </div>
-    @empty
+        @empty
         <div class="col-span-3 text-center text-gray-500">
             Tidak ada kelas
         </div>
-    @endforelse
+        @endforelse
 
+    </div>
 </div>
+
 @endsection
