@@ -19,7 +19,7 @@ class Kelas extends Model
 
     public function dosen()
     {
-        return $this->belongsTo(User::class, 'dosen_id');
+        return $this->belongsTo(Dosen::class);
     }
 
     public function krs()
