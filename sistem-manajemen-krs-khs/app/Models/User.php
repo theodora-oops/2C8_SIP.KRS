@@ -48,4 +48,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Mahasiswa::class);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 33ba2a0b257578680715262f7c4346273afbdba0
