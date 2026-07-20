@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+
 
 class ProfileController extends Controller
 {
@@ -37,10 +39,10 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
 
         $request->validate([
-            'nama' => 'required',
             'no_hp' => 'nullable|max:20',
             'alamat' => 'nullable',
             'password' => 'nullable|min:8',
@@ -72,7 +74,6 @@ class ProfileController extends Controller
             $profile->foto = $filename;
         }
 
-        $profile->nama = $request->nama;
         $profile->no_hp = $request->no_hp;
         $profile->alamat = $request->alamat;
 

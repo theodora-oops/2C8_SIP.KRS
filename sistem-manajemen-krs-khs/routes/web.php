@@ -126,7 +126,12 @@ Route::middleware(['auth', 'role:mahasiswa'])
             ->name('mahasiswa.krs.store');
 
         Route::get('/riwayat-krs', [KrsController::class, 'riwayat']);
+        Route::get('/riwayat-krs/export', [KrsController::class, 'exportRiwayatPdf'])
+            ->name('mahasiswa.riwayat.export');
+
         Route::get('/khs', [KrsController::class, 'khs']);
+        Route::get('/khs/export', [KrsController::class, 'exportPdf'])
+            ->name('mahasiswa.khs.export');
     });
 
 // ================= PRAKTIKUM 6 PW =================

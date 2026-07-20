@@ -2,10 +2,15 @@
 @section('title', 'Kartu Hasil studi')
 @section('content')
 
-<!-- IPK -->
-<div class="mb-6 bg-white p-5 rounded-xl shadow">
-    <h3 class="text-lg font-semibold">IPK</h3>
-    <p class="text-3xl font-bold text-blue-600">{{ $ipk }}</p>
+<!-- IPK + export pdf -->
+<div class="mb-6 flex justify-between items-center">
+
+    <div class="bg-white p-5 rounded-xl shadow flex-1 mr-4">
+        <h3 class="text-lg font-semibold">IPK</h3>
+        <p class="text-3xl font-bold text-blue-600">{{ $ipk }}</p>
+        </br>
+        <a href="{{ route('mahasiswa.khs.export') }}" class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl">Export PDF</a>
+    </div>
 </div>
 
 @foreach($hasil as $semester => $item)

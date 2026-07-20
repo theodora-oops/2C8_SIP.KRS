@@ -75,7 +75,7 @@
                         </label>
 
                         <input type="text" value="{{ $profile->nomor_induk }}"
-                            class="w-full border rounded-xl px-4 py-3 bg-gray-100" readonly>
+                            class="w-full border rounded-xl px-4 py-3 bg-gray-100 cursor-not-allowed" disabled>
                     </div>
 
                     {{-- KELAS KHUSUS MAHASISWA --}}
@@ -86,7 +86,7 @@
                         </label>
 
                         <input type="text" value="{{ $profile->kelas }}"
-                            class="w-full border rounded-xl px-4 py-3 bg-gray-100" readonly>
+                            class="w-full border rounded-xl px-4 py-3 bg-gray-100 cursor-not-allowed" disabled>
                     </div>
                     @endif
 
@@ -97,7 +97,7 @@
                         </label>
 
                         <input type="text" name="nama" value="{{ old('nama', $profile->nama) }}"
-                            class="w-full border rounded-xl px-4 py-3">
+                            class="w-full border rounded-xl px-4 py-3 bg-gray-100 cursor-not-allowed" disabled>
                     </div>
 
                     {{-- EMAIL --}}
@@ -107,7 +107,7 @@
                         </label>
 
                         <input type="text" value="{{ $user->email }}"
-                            class="w-full border rounded-xl px-4 py-3 bg-gray-100" readonly>
+                            class="w-full border rounded-xl px-4 py-3 bg-gray-100 cursor-not-allowed" disabled>
                     </div>
 
                     {{-- NO HP --}}
@@ -117,7 +117,7 @@
                         </label>
 
                         <input type="text" name="no_hp" value="{{ old('no_hp', $profile->no_hp) }}"
-                            class="w-full border rounded-xl px-4 py-3">
+                            class="w-full border rounded-xl px-4 py-3 bg-gray-100 cursor-not-allowed" disabled>
                     </div>
 
                     {{-- PASSWORD BARU --}}

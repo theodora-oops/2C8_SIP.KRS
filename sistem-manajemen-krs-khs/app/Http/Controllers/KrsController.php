@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Matkul;
 use App\Models\Krs;
 use App\Models\Semester;
 use App\Models\Period;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class KrsController extends Controller
@@ -174,10 +174,63 @@ class KrsController extends Controller
         return view('pages.mahasiswa.riwayat-krs', compact('krs'));
     }
 
+    public function exportRiwayatPdf()
+{
+    $mahasiswa = Auth::user()->mahasiswa;
+
+    $krs = Krs::with(['matkul', 'semester'])
+        ->where('mahasiswa_id', $mahasiswa->id)
+        ->get()
+        ->groupBy('semester.nama');
+
+
+    $pdf = Pdf::loadView(
+        'pages.mahasiswa.riwayat_krs_pdf',
+        [
+            'krs' => $krs,
+            'mahasiswa' => $mahasiswa
+        ]
+    );
+
+
+    return $pdf->download('Riwayat_KRS.pdf');
+}
+
+
     public function khs()
 {
     $mahasiswaId = Auth::user()->mahasiswa->id;
 
+    $data = $this->getKhsData($mahasiswaId);
+
+    return view('pages.mahasiswa.khs', [
+        'hasil' => $data['hasil'],
+        'ipk' => $data['ipk']
+    ]);
+}
+
+
+public function exportPdf()
+{
+    $mahasiswa = Auth::user()->mahasiswa;
+
+    $data = $this->getKhsData($mahasiswa->id);
+
+    $pdf = Pdf::loadView(
+        'pages.mahasiswa.khs_pdf',
+        [
+            'hasil' => $data['hasil'],
+            'ipk' => $data['ipk'],
+            'mahasiswa' => $mahasiswa
+        ]
+    );
+
+    return $pdf->download('Kartu_Hasil_Studi.pdf');
+}
+
+
+private function getKhsData($mahasiswaId)
+{
     $bobot = [
         'A' => 4,
         'B' => 3,
@@ -191,29 +244,37 @@ class KrsController extends Controller
         ->get();
 
     $hasil = [];
+
     $totalSksKeseluruhan = 0;
     $totalBobotKeseluruhan = 0;
+
 
     foreach ($krs->groupBy('semester.nama') as $semester => $items) {
 
         $totalSks = 0;
         $totalBobot = 0;
 
+
         foreach ($items as $item) {
 
             $huruf = $item->nilai?->nilai;
 
+
             if ($huruf) {
+
                 $sks = $item->matkul->sks;
                 $b = $bobot[$huruf] ?? 0;
 
+
                 $totalSks += $sks;
                 $totalBobot += ($b * $sks);
+
 
                 $totalSksKeseluruhan += $sks;
                 $totalBobotKeseluruhan += ($b * $sks);
             }
         }
+
 
         $hasil[$semester] = [
             'data' => $items,
@@ -224,10 +285,15 @@ class KrsController extends Controller
         ];
     }
 
+
     $ipk = $totalSksKeseluruhan > 0
         ? round($totalBobotKeseluruhan / $totalSksKeseluruhan, 2)
         : '-';
 
-    return view('pages.mahasiswa.khs', compact('hasil', 'ipk'));
+
+    return [
+        'hasil' => $hasil,
+        'ipk' => $ipk
+    ];
 }
 }

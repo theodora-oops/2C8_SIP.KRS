@@ -4,6 +4,12 @@
 
 @section('content')
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+</style>
+
+<div style="font-family: 'Inter', sans-serif;">
+
 {{-- BACK BUTTON --}}
 <a href="{{ route('dosen.kelas') }}"
    class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 font-medium mb-5 transition">
@@ -16,7 +22,6 @@
 <h2 class="text-2xl font-bold mb-4">{{ $matkul->nama_mk }}</h2>
 
 <div class="bg-white p-5 rounded-xl shadow">
-
     <h3 class="font-semibold mb-3">Daftar Mahasiswa</h3>
 
     @if($mahasiswas->count() > 0)
@@ -24,16 +29,16 @@
             <thead class="bg-gray-100">
                 <tr>
                     <th class="p-2 border">No</th>
+                    <th class="p-2 border">NIM</th>
                     <th class="p-2 border">Nama</th>
-                    <th class="p-2 border">Email</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($mahasiswas as $index => $krs)
                 <tr>
                     <td class="p-2 border">{{ $index + 1 }}</td>
-                    <td class="p-2 border">{{ $krs->mahasiswa->name }}</td>
-                    <td class="p-2 border">{{ $krs->mahasiswa->email }}</td>
+                    <td class="p-2 border">{{ $krs->mahasiswa->nomor_induk }}</td>
+                    <td class="p-2 border">{{ $krs->mahasiswa->nama }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -43,5 +48,5 @@
     @endif
 
 </div>
-
+</div>
 @endsection

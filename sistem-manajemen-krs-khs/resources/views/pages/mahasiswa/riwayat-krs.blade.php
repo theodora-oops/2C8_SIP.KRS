@@ -5,6 +5,13 @@
 
 <div class="space-y-6">
 
+<div class="flex justify-end mb-4">
+    <a href="{{ route('mahasiswa.riwayat.export') }}"
+       class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-lg">
+        Export PDF
+    </a>
+</div>
+
 @forelse($krs as $semester => $items)
 
 <div class="bg-white p-6 rounded-xl shadow">
