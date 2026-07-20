@@ -29,8 +29,4 @@ class Dosen extends Model
     {
     return $this->hasMany(Matkul::class);
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 33ba2a0b257578680715262f7c4346273afbdba0
